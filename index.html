@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>😭 Mood To-Do Manager 😭</title>
+    <title>MoodToDo</title>
     <script src="face-api.min.js"></script>
     <style>
         * {
@@ -375,20 +375,20 @@
 </head>
 <body>
     <div class="container">
-        <h1>😭🎉 MOOD-BASED TO-DO DESTROYER 🎉😭</h1>
+        <h1> MOOD TO-DO DESTROYER </h1>
         
         <div class="status-bar" id="statusBar">
-            🎭 Select a day to manage tasks! 🎭
+            Select a day to manage tasks!
         </div>
 
         <div class="week-selector">
-            <button class="day-btn" onclick="selectDay('Monday')">MON 🌙</button>
-            <button class="day-btn" onclick="selectDay('Tuesday')">TUE 🔥</button>
-            <button class="day-btn" onclick="selectDay('Wednesday')">WED 🐫</button>
-            <button class="day-btn" onclick="selectDay('Thursday')">THU ⚡</button>
-            <button class="day-btn" onclick="selectDay('Friday')">FRI 🎉</button>
-            <button class="day-btn" onclick="selectDay('Saturday')">SAT 🌈</button>
-            <button class="day-btn" onclick="selectDay('Sunday')">SUN ☀️</button>
+            <button class="day-btn" onclick="selectDay('Monday')">MON </button>
+            <button class="day-btn" onclick="selectDay('Tuesday')">TUE </button>
+            <button class="day-btn" onclick="selectDay('Wednesday')">WED </button>
+            <button class="day-btn" onclick="selectDay('Thursday')">THU </button>
+            <button class="day-btn" onclick="selectDay('Friday')">FRI </button>
+            <button class="day-btn" onclick="selectDay('Saturday')">SAT </button>
+            <button class="day-btn" onclick="selectDay('Sunday')">SUN </button>
         </div>
 
         <div class="task-manager" id="taskManager">
@@ -396,8 +396,8 @@
                 ✨ ADD TASKS FOR <span id="currentDay">???</span> ✨
             </h3>
             <div class="add-task-form">
-                <input type="text" id="taskInput" placeholder="Type your task... if you dare! 😈">
-                <button class="add-btn" onclick="addTask()">ADD! 💥</button>
+                <input type="text" id="taskInput" placeholder="Type your task... if you dare! ">
+                <button class="add-btn" onclick="addTask()">ADD!</button>
             </div>
             <ul class="task-list" id="taskList"></ul>
         </div>
@@ -410,7 +410,7 @@
                 <video id="video" width="640" height="480" autoplay muted playsinline></video>
             </div>
             <button class="view-tasks-btn" onclick="viewTasks()">
-                VIEW MY TASKS! 👀
+                VIEW MY TASKS!
             </button>
         </div>
     </div>
@@ -451,10 +451,10 @@
         ]).then(() => {
             faceDetectionReady = true;
             startVideo();
-            statusBar.textContent = '✅ FACE SCANNER READY! Pick a day! ✅';
+            statusBar.textContent = 'FACE SCANNER READY! Pick a day! ';
         }).catch(err => {
             console.error('Failed to load models:', err);
-            statusBar.textContent = '❌ FACE SCANNER BROKEN! But you can still add tasks... ❌';
+            statusBar.textContent = 'FACE SCANNER BROKEN! But you can still add tasks... ';
         });
 
         async function startVideo() {
@@ -464,7 +464,7 @@
                 await video.play();
             } catch (err) {
                 console.error('Error starting video:', err);
-                statusBar.textContent = '📷 Camera denied! No mood detection for you! 📷';
+                statusBar.textContent = 'Camera denied! No mood detection for you!';
             }
         }
 
@@ -495,7 +495,7 @@
         function selectDay(day) {
             selectedDay = day;
             currentDaySpan.textContent = day.toUpperCase();
-            statusBar.textContent = `🎯 YOU SELECTED ${day.toUpperCase()}! ADD SOME TASKS! 🎯`;
+            statusBar.textContent = `YOU SELECTED ${day.toUpperCase()}! ADD SOME TASKS! `;
             
             // Update active button
             document.querySelectorAll('.day-btn').forEach(btn => {
@@ -508,13 +508,13 @@
 
         function addTask() {
             if (!selectedDay) {
-                alert('❌ PICK A DAY FIRST, DUMMY! ❌');
+                alert('PICK A DAY FIRST, DUMMY! ');
                 return;
             }
 
             const taskText = taskInput.value.trim();
             if (!taskText) {
-                alert('❌ TYPE SOMETHING! HELLO?! ❌');
+                alert('TYPE SOMETHING! HELLO?! ');
                 return;
             }
 
@@ -527,7 +527,7 @@
             taskInput.value = '';
             renderTasks();
             
-            statusBar.textContent = `✨ TASK ADDED TO ${selectedDay.toUpperCase()}! ✨`;
+            statusBar.textContent = `TASK ADDED TO ${selectedDay.toUpperCase()}! `;
         }
 
         function deleteTask(id) {
@@ -539,37 +539,37 @@
 
         function renderTasks() {
             if (!selectedDay) {
-                taskList.innerHTML = '<div class="empty-state">👈 SELECT A DAY FIRST! 👈</div>';
+                taskList.innerHTML = '<div class="empty-state">SELECT A DAY FIRST! </div>';
                 return;
             }
 
             const tasks = tasksByDay[selectedDay];
             
             if (tasks.length === 0) {
-                taskList.innerHTML = '<div class="empty-state">📝 NO TASKS YET! ADD SOME! 📝</div>';
+                taskList.innerHTML = '<div class="empty-state">NO TASKS YET! ADD SOME!</div>';
                 return;
             }
 
             taskList.innerHTML = tasks.map(task => `
                 <li class="task-item" id="task-${task.id}">
                     <span>✓ ${task.text}</span>
-                    <button class="delete-btn" onclick="deleteTask(${task.id})">🗑️ DELETE</button>
+                    <button class="delete-btn" onclick="deleteTask(${task.id})">DELETE</button>
                 </li>
             `).join('');
         }
 
         async function viewTasks() {
             if (!selectedDay) {
-                alert('❌ PICK A DAY FIRST! ❌');
+                alert('PICK A DAY FIRST!');
                 return;
             }
 
             if (!faceDetectionReady) {
-                alert('⚠️ FACE SCANNER NOT READY! Wait a moment... ⚠️');
+                alert('FACE SCANNER NOT READY! Wait a moment... ');
                 return;
             }
 
-            statusBar.textContent = '👁️ SCANNING YOUR FACE... HOLD STILL! 👁️';
+            statusBar.textContent = 'SCANNING YOUR FACE... HOLD STILL!';
             isCheckingMood = true;
 
             // Wait a moment to detect face
@@ -584,7 +584,7 @@
 
             if (!detections || detections.length === 0) {
                 showMoodMessage(
-                    '👻 NO FACE DETECTED! 👻',
+                    'NO FACE DETECTED! ',
                     'Are you a ghost? Try again!',
                     'neutral'
                 );
@@ -614,12 +614,12 @@
             const taskCount = tasks.length;
             
             showMoodMessage(
-                '😄 YOU\'RE TOO HAPPY! 😄',
-                `You have ${taskCount} task${taskCount !== 1 ? 's' : ''} for ${selectedDay}!<br><br>
-                🎉 GOOD JOB! KEEP BEING AWESOME! 🎉<br><br>
-                (Tasks are still there, don't worry!)`,
-                'happy'
-            );
+        'YOU\'RE TOO HAPPY! ',
+        ` GOOD JOB! KEEP THAT SMILE!<br><br>
+        (Don't worry about tasks)`,
+        'happy'
+    );
+  
         }
 
         function handleSadAngryMood() {
@@ -628,9 +628,9 @@
 
             if (taskCount === 0) {
                 showMoodMessage(
-                    '😢 YOU LOOK SAD... 😢',
+                    'YOU LOOK SAD... ',
                     `Good news! No tasks for ${selectedDay} anyway!<br><br>
-                    💤 YOU DESERVE A BREAK! 💤`,
+                    YOU DESERVE A BREAK! `,
                     'sad'
                 );
                 return;
@@ -649,10 +649,10 @@
                 renderTasks();
                 
                 showMoodMessage(
-                    '💥 TASKS DELETED! 💥',
-                    `You looked sad/angry so I DESTROYED your ${taskCount} task${taskCount !== 1 ? 's' : ''}!<br><br>
-                    😴 YOU DON'T HAVE ANY TASKS FOR ${selectedDay.toUpperCase()}! 😴<br><br>
-                    🛌 TAKE A BREAK! YOU DESERVE IT! 🛌`,
+                    'TASKS DELETED! ',
+                    `You looked sad so I DESTROYED your ${taskCount} task${taskCount !== 1 ? 's' : ''}!<br><br>
+                     YOU DON'T HAVE ANY TASKS FOR ${selectedDay.toUpperCase()}! <br><br>
+                    TAKE A BREAK! YOU DESERVE IT! `,
                     'deleted'
                 );
             }, 500);
@@ -664,17 +664,17 @@
 
             if (taskCount === 0) {
                 showMoodMessage(
-                    '😌 YOU\'RE CALM! 😌',
-                    `No tasks for ${selectedDay}!<br><br>
-                    ✨ ENJOY YOUR FREE DAY! ✨`,
+                    'YOU\'RE CALM! ',
+                    `Lucky Day! No tasks for ${selectedDay}<br><br>
+                    ENJOY YOUR FREE DAY! `,
                     'calm'
                 );
             } else {
                 showMoodMessage(
-                    '😌 YOU\'RE CALM! 😌',
+                    'YOU\'RE CALM! ',
                     `Here are your ${taskCount} task${taskCount !== 1 ? 's' : ''} for ${selectedDay}:<br><br>
                     ${tasks.map((t, i) => `${i + 1}. ${t.text}`).join('<br>')}<br><br>
-                    💪 YOU GOT THIS! 💪`,
+                    YOU GOT THIS! `,
                     'calm'
                 );
             }
@@ -692,12 +692,12 @@
             moodMessage.innerHTML = `
                 <h2>${title}</h2>
                 <p>${message}</p>
-                <button class="close-btn" onclick="closeMoodMessage()">CLOSE! ❌</button>
+                <button class="close-btn" onclick="closeMoodMessage()">CLOSE! </button>
             `;
             moodMessage.style.background = colors[mood] || colors.neutral;
             
             moodOverlay.classList.add('active');
-            statusBar.textContent = `🎭 MOOD CHECK COMPLETE! 🎭`;
+            statusBar.textContent = `MOOD CHECK COMPLETE! `;
         }
 
         function closeMoodMessage() {
