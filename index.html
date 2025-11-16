@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>😭 Mood To-Do Manager 😭</title>
+    <script defer src="face-api.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: repeating-linear-gradient(
+                45deg,
+                #ff6b9d,
+                #ff6b9d 10px,
+                #c44569 10px,
+                #c44569 20px
+            );
+            min-height: 100vh;
+            padding: 20px;
+            animation: rainbowBackground 10s infinite;
+        }
+
+        @keyframes rainbowBackground {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #fff700, #00ff00, #00d4ff);
+            border: 10px dashed #ff00ff;
+            border-radius: 50px;
+            padding: 30px;
+            box-shadow: 0 0 50px rgba(255, 0, 255, 0.8), inset 0 0 30px rgba(0, 255, 0, 0.3);
+            position: relative;
+            animation: wobble 2s infinite;
+        }
+
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(1deg); }
+            75% { transform: rotate(-1deg); }
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff0080;
+            font-size: 3em;
+            text-shadow: 3px 3px 0 #00ff00, 6px 6px 0 #0080ff;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .week-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .day-btn {
+            padding: 15px 25px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            color: white;
+            border: 5px solid #000;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-shadow: 2px 2px 0 #000;
+            box-shadow: 5px 5px 0 #000;
+        }
+
+        .day-btn:hover {
+            transform: scale(1.2) rotate(5deg);
+            box-shadow: 8px 8px 0 #000;
+        }
+
+        .day-btn.active {
+            background: linear-gradient(45deg, #ffff00, #ff0000);
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .task-manager {
+            background: rgba(255, 255, 255, 0.9);
+            border: 8px solid #ff0000;
+            border-radius: 30px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+
+        .add-task-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 15px;
+            border: 5px solid #ff00ff;
+            border-radius: 20px;
+            font-size: 16px;
+            font-family: 'Comic Sans MS', cursive;
+            background: #ffffcc;
+            box-shadow: inset 3px 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .add-btn {
+            padding: 15px 30px;
+            background: linear-gradient(180deg, #00ff00, #00aa00);
+            color: white;
+            border: 5px solid #000;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-shadow: 2px 2px 0 #000;
+            box-shadow: 5px 5px 0 #000;
+            font-family: 'Comic Sans MS', cursive;
+        }
+
+        .add-btn:active {
+            transform: translate(5px, 5px);
+            box-shadow: 0 0 0 #000;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            background: linear-gradient(90deg, #ffccff, #ccffff);
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 4px solid #000;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            box-shadow: 4px 4px 0 #000;
+            animation: slideInRight 0.5s;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .delete-btn {
+            padding: 8px 15px;
+            background: linear-gradient(180deg, #ff0000, #cc0000);
+            color: white;
+            border: 3px solid #000;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive;
+            box-shadow: 3px 3px 0 #000;
+        }
+
+        .delete-btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0 0 0 #000;
+        }
+
+        .video-section {
+            background: rgba(0, 0, 0, 0.8);
+            border: 10px solid #00ff00;
+            border-radius: 30px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px #00ff00;
+        }
+
+        .video-container {
+            position: relative;
+            display: inline-block;
+            border: 8px solid #ff00ff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 40px #ff00ff;
+        }
+
+        #video {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .view-tasks-btn {
+            padding: 20px 40px;
+            background: linear-gradient(45deg, #ff0080, #ff8000);
+            color: white;
+            border: 6px solid #000;
+            border-radius: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            text-shadow: 3px 3px 0 #000;
+            box-shadow: 6px 6px 0 #000;
+            font-family: 'Comic Sans MS', cursive;
+            animation: wiggle 1s infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+
+        .view-tasks-btn:active {
+            transform: translate(6px, 6px);
+            box-shadow: 0 0 0 #000;
+        }
+
+        .mood-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .mood-overlay.active {
+            display: flex;
+        }
+
+        .mood-message {
+            background: white;
+            padding: 50px;
+            border: 15px solid #000;
+            border-radius: 40px;
+            text-align: center;
+            max-width: 600px;
+            animation: explode 0.6s;
+            box-shadow: 0 0 60px rgba(255, 0, 255, 0.8);
+        }
+
+        @keyframes explode {
+            0% { transform: scale(0) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
+        }
+
+        .mood-message h2 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            animation: colorChange 1s infinite;
+        }
+
+        @keyframes colorChange {
+            0% { color: #ff0000; }
+            25% { color: #00ff00; }
+            50% { color: #0000ff; }
+            75% { color: #ff00ff; }
+            100% { color: #ff0000; }
+        }
+
+        .mood-message p {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #ff0000, #ff8800);
+            color: white;
+            border: 5px solid #000;
+            border-radius: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive;
+            box-shadow: 5px 5px 0 #000;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .close-btn:active {
+            transform: translate(5px, 5px);
+            box-shadow: 0 0 0 #000;
+        }
+
+        .status-bar {
+            background: linear-gradient(90deg, #ff00ff, #00ffff, #ff00ff);
+            border: 5px solid #000;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 0 #000;
+            animation: slideColors 3s infinite;
+        }
+
+        @keyframes slideColors {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.5em;
+            color: #666;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .task-item.deleting {
+            animation: explodeOut 0.5s;
+        }
+
+        @keyframes explodeOut {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: scale(2) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>😭🎉 MOOD-BASED TO-DO DESTROYER 🎉😭</h1>
+        
+        <div class="status-bar" id="statusBar">
+            🎭 Select a day to manage tasks! 🎭
+        </div>
+
+        <div class="week-selector">
+            <button class="day-btn" onclick="selectDay('Monday')">MON 🌙</button>
+            <button class="day-btn" onclick="selectDay('Tuesday')">TUE 🔥</button>
+            <button class="day-btn" onclick="selectDay('Wednesday')">WED 🐫</button>
+            <button class="day-btn" onclick="selectDay('Thursday')">THU ⚡</button>
+            <button class="day-btn" onclick="selectDay('Friday')">FRI 🎉</button>
+            <button class="day-btn" onclick="selectDay('Saturday')">SAT 🌈</button>
+            <button class="day-btn" onclick="selectDay('Sunday')">SUN ☀️</button>
+        </div>
+
+        <div class="task-manager" id="taskManager">
+            <h3 style="text-align: center; color: #ff0080; font-size: 2em; margin-bottom: 15px;">
+                ✨ ADD TASKS FOR <span id="currentDay">???</span> ✨
+            </h3>
+            <div class="add-task-form">
+                <input type="text" id="taskInput" placeholder="Type your task... if you dare! 😈">
+                <button class="add-btn" onclick="addTask()">ADD! 💥</button>
+            </div>
+            <ul class="task-list" id="taskList"></ul>
+        </div>
+
+        <div class="video-section">
+            <h3 style="color: #00ff00; font-size: 2em; margin-bottom: 15px; text-shadow: 2px 2px 0 #000;">
+                👁️ FACE SCANNER 3000 👁️
+            </h3>
+            <div class="video-container">
+                <video id="video" width="640" height="480" autoplay muted playsinline></video>
+            </div>
+            <button class="view-tasks-btn" onclick="viewTasks()">
+                VIEW MY TASKS! 👀
+            </button>
+        </div>
+    </div>
+
+    <div class="mood-overlay" id="moodOverlay">
+        <div class="mood-message" id="moodMessage"></div>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const taskList = document.getElementById('taskList');
+        const taskInput = document.getElementById('taskInput');
+        const statusBar = document.getElementById('statusBar');
+        const currentDaySpan = document.getElementById('currentDay');
+        const moodOverlay = document.getElementById('moodOverlay');
+        const moodMessage = document.getElementById('moodMessage');
+
+        // Store tasks per day
+        let tasksByDay = {
+            'Monday': [],
+            'Tuesday': [],
+            'Wednesday': [],
+            'Thursday': [],
+            'Friday': [],
+            'Saturday': [],
+            'Sunday': []
+        };
+
+        let selectedDay = null;
+        let faceDetectionReady = false;
+        let isCheckingMood = false;
+
+        // Load models
+        Promise.all([
+            faceapi.nets.tinyFaceDetector.loadFromUri('./models'),
+            faceapi.nets.faceLandmark68Net.loadFromUri('./models'),
+            faceapi.nets.faceExpressionNet.loadFromUri('./models')
+        ]).then(() => {
+            faceDetectionReady = true;
+            startVideo();
+            statusBar.textContent = '✅ FACE SCANNER READY! Pick a day! ✅';
+        }).catch(err => {
+            console.error('Failed to load models:', err);
+            statusBar.textContent = '❌ FACE SCANNER BROKEN! But you can still add tasks... ❌';
+        });
+
+        async function startVideo() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+                video.srcObject = stream;
+                await video.play();
+            } catch (err) {
+                console.error('Error starting video:', err);
+                statusBar.textContent = '📷 Camera denied! No mood detection for you! 📷';
+            }
+        }
+
+        video.addEventListener('play', () => {
+            const canvas = faceapi.createCanvasFromMedia(video);
+            document.querySelector('.video-container').append(canvas);
+            
+            const displaySize = { width: video.width, height: video.height };
+            faceapi.matchDimensions(canvas, displaySize);
+
+            // Draw face detection continuously
+            setInterval(async () => {
+                if (!isCheckingMood) return;
+
+                const detections = await faceapi
+                    .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+                    .withFaceLandmarks()
+                    .withFaceExpressions();
+
+                const resizedDetections = faceapi.resizeResults(detections, displaySize);
+                canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+                faceapi.draw.drawDetections(canvas, resizedDetections);
+                faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+                faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+            }, 100);
+        });
+
+        function selectDay(day) {
+            selectedDay = day;
+            currentDaySpan.textContent = day.toUpperCase();
+            statusBar.textContent = `🎯 YOU SELECTED ${day.toUpperCase()}! ADD SOME TASKS! 🎯`;
+            
+            // Update active button
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderTasks();
+        }
+
+        function addTask() {
+            if (!selectedDay) {
+                alert('❌ PICK A DAY FIRST, DUMMY! ❌');
+                return;
+            }
+
+            const taskText = taskInput.value.trim();
+            if (!taskText) {
+                alert('❌ TYPE SOMETHING! HELLO?! ❌');
+                return;
+            }
+
+            const task = {
+                id: Date.now(),
+                text: taskText
+            };
+
+            tasksByDay[selectedDay].push(task);
+            taskInput.value = '';
+            renderTasks();
+            
+            statusBar.textContent = `✨ TASK ADDED TO ${selectedDay.toUpperCase()}! ✨`;
+        }
+
+        function deleteTask(id) {
+            if (!selectedDay) return;
+            
+            tasksByDay[selectedDay] = tasksByDay[selectedDay].filter(task => task.id !== id);
+            renderTasks();
+        }
+
+        function renderTasks() {
+            if (!selectedDay) {
+                taskList.innerHTML = '<div class="empty-state">👈 SELECT A DAY FIRST! 👈</div>';
+                return;
+            }
+
+            const tasks = tasksByDay[selectedDay];
+            
+            if (tasks.length === 0) {
+                taskList.innerHTML = '<div class="empty-state">📝 NO TASKS YET! ADD SOME! 📝</div>';
+                return;
+            }
+
+            taskList.innerHTML = tasks.map(task => `
+                <li class="task-item" id="task-${task.id}">
+                    <span>✓ ${task.text}</span>
+                    <button class="delete-btn" onclick="deleteTask(${task.id})">🗑️ DELETE</button>
+                </li>
+            `).join('');
+        }
+
+        async function viewTasks() {
+            if (!selectedDay) {
+                alert('❌ PICK A DAY FIRST! ❌');
+                return;
+            }
+
+            if (!faceDetectionReady) {
+                alert('⚠️ FACE SCANNER NOT READY! Wait a moment... ⚠️');
+                return;
+            }
+
+            statusBar.textContent = '👁️ SCANNING YOUR FACE... HOLD STILL! 👁️';
+            isCheckingMood = true;
+
+            // Wait a moment to detect face
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            const detections = await faceapi
+                .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+                .withFaceLandmarks()
+                .withFaceExpressions();
+
+            isCheckingMood = false;
+
+            if (!detections || detections.length === 0) {
+                showMoodMessage(
+                    '👻 NO FACE DETECTED! 👻',
+                    'Are you a ghost? Try again!',
+                    'neutral'
+                );
+                return;
+            }
+
+            const expressions = detections[0].expressions;
+            const happy = expressions.happy || 0;
+            const sad = expressions.sad || 0;
+            const angry = expressions.angry || 0;
+            const neutral = expressions.neutral || 0;
+
+            console.log('Detected expressions:', { happy, sad, angry, neutral });
+
+            // Determine mood and action
+            if (happy > 0.5) {
+                handleHappyMood();
+            } else if (sad > 0.3 || angry > 0.3) {
+                handleSadAngryMood();
+            } else {
+                handleCalmMood();
+            }
+        }
+
+        function handleHappyMood() {
+            const tasks = tasksByDay[selectedDay];
+            const taskCount = tasks.length;
+            
+            showMoodMessage(
+                '😄 YOU\'RE TOO HAPPY! 😄',
+                `You have ${taskCount} task${taskCount !== 1 ? 's' : ''} for ${selectedDay}!<br><br>
+                🎉 GOOD JOB! KEEP BEING AWESOME! 🎉<br><br>
+                (Tasks are still there, don't worry!)`,
+                'happy'
+            );
+        }
+
+        function handleSadAngryMood() {
+            const tasks = tasksByDay[selectedDay];
+            const taskCount = tasks.length;
+
+            if (taskCount === 0) {
+                showMoodMessage(
+                    '😢 YOU LOOK SAD... 😢',
+                    `Good news! No tasks for ${selectedDay} anyway!<br><br>
+                    💤 YOU DESERVE A BREAK! 💤`,
+                    'sad'
+                );
+                return;
+            }
+
+            // DELETE ALL TASKS!
+            tasksByDay[selectedDay].forEach(task => {
+                const element = document.getElementById(`task-${task.id}`);
+                if (element) {
+                    element.classList.add('deleting');
+                }
+            });
+
+            setTimeout(() => {
+                tasksByDay[selectedDay] = [];
+                renderTasks();
+                
+                showMoodMessage(
+                    '💥 TASKS DELETED! 💥',
+                    `You looked sad/angry so I DESTROYED your ${taskCount} task${taskCount !== 1 ? 's' : ''}!<br><br>
+                    😴 YOU DON'T HAVE ANY TASKS FOR ${selectedDay.toUpperCase()}! 😴<br><br>
+                    🛌 TAKE A BREAK! YOU DESERVE IT! 🛌`,
+                    'deleted'
+                );
+            }, 500);
+        }
+
+        function handleCalmMood() {
+            const tasks = tasksByDay[selectedDay];
+            const taskCount = tasks.length;
+
+            if (taskCount === 0) {
+                showMoodMessage(
+                    '😌 YOU\'RE CALM! 😌',
+                    `No tasks for ${selectedDay}!<br><br>
+                    ✨ ENJOY YOUR FREE DAY! ✨`,
+                    'calm'
+                );
+            } else {
+                showMoodMessage(
+                    '😌 YOU\'RE CALM! 😌',
+                    `Here are your ${taskCount} task${taskCount !== 1 ? 's' : ''} for ${selectedDay}:<br><br>
+                    ${tasks.map((t, i) => `${i + 1}. ${t.text}`).join('<br>')}<br><br>
+                    💪 YOU GOT THIS! 💪`,
+                    'calm'
+                );
+            }
+        }
+
+        function showMoodMessage(title, message, mood) {
+            const colors = {
+                happy: 'linear-gradient(135deg, #ffff00, #00ff00)',
+                sad: 'linear-gradient(135deg, #6a5acd, #4169e1)',
+                deleted: 'linear-gradient(135deg, #ff0000, #ff8800)',
+                calm: 'linear-gradient(135deg, #87ceeb, #98fb98)',
+                neutral: 'linear-gradient(135deg, #dcdcdc, #c0c0c0)'
+            };
+
+            moodMessage.innerHTML = `
+                <h2>${title}</h2>
+                <p>${message}</p>
+                <button class="close-btn" onclick="closeMoodMessage()">CLOSE! ❌</button>
+            `;
+            moodMessage.style.background = colors[mood] || colors.neutral;
+            
+            moodOverlay.classList.add('active');
+            statusBar.textContent = `🎭 MOOD CHECK COMPLETE! 🎭`;
+        }
+
+        function closeMoodMessage() {
+            moodOverlay.classList.remove('active');
+        }
+
+        // Allow Enter key to add task
+        taskInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTask();
+        });
+
+        // Close overlay on background click
+        moodOverlay.addEventListener('click', (e) => {
+            if (e.target === moodOverlay) closeMoodMessage();
+        });
+
+        // Initial render
+        renderTasks();
+    </script>
+</body>
+</html>
