@@ -13,15 +13,14 @@ Happy & Joyful: Hides all tasks and displays: "Good job! Keep that smile! 😊 (
 
 
 How we built it
-Frontend: React with excessive CSS animations for emotional flair
+Frontend: HTML/CSS/JS with enough animations to cause seizures
 
-Mood Detection: A very simplistic facial expression analysis library that mostly just guesses
+Face Detection: face-api.js to judge your facial expressions
 
-Task Management: Local storage (because your tasks probably shouldn't be permanent anyway)
+Task Storage: JavaScript objects (because your commitment to tasks is temporary anyway)
 
-The "AI": Basically just if/else statements with extra steps and questionable accuracy
+CSS: Every animation property known to mankind, Comic Sans MS for maximum professionality
 
-Special Sauce: Pure nihilism mixed with digital empathy
 
 
 Why it's useless
