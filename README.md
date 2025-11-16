@@ -52,3 +52,11 @@ cd my-mood-todo
 
 # 2. Start a local server (Python 3)
 python -m http.server 8000
+
+Then:
+
+Open your browser (Chrome/Edge recommended)
+
+Go to: http://localhost:8000
+
+Allow camera access when prompted (CRITICAL - or the mood detection won't work!)
